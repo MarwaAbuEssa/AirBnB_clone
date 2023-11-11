@@ -133,7 +133,7 @@ class HBNBCommand(cmd.Cmd):
     def cmd_all(self, arg):
         """Usage: all or all <class> or <class>.all()
         all obj instances of a class.
-        no class, get all init objects."""
+        when no class, get all init objects."""
         argl = parse(arg)
         if len(argl) > 0 and argl[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
