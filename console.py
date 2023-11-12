@@ -56,11 +56,11 @@ class HBNBCommand(cmd.Cmd):
     def invalid(self, arg):
         """if input is invalid"""
         do_dict = {
-            "all": self.cmd_all,
-            "show": self.cmd_show,
-            "destroy": self.cmd_destroy,
-            "count": self.cmd_count,
-            "update": self.cmd_update
+            "all": self.do_all,
+            "show": self.do_show,
+            "destroy": self.do_destroy,
+            "count": self.do_count,
+            "update": self.do_update
         }
         match = re.search(r"\.", arg)
         if match is not None:
@@ -74,16 +74,16 @@ class HBNBCommand(cmd.Cmd):
         print("*** unknown: {}".format(arg))
         return False
 
-    def cmd_quit(self, arg):
+    def do_quit(self, arg):
         """Quit."""
         return True
 
-    def cmd_EOF(self, arg):
+    def do_EOF(self, arg):
         """EOF."""
         print("")
         return True
 
-    def cmd_create(self, arg):
+    def do_create(self, arg):
         """Usage: create <class>
         init new class with id.
         """
@@ -96,7 +96,7 @@ class HBNBCommand(cmd.Cmd):
             print(eval(argl[0])().id)
             storage.save()
 
-    def cmd_show(self, arg):
+    def do_show(self, arg):
         """Usage: show <class> <id> or <class>.show(<id>)
         get string  of a class by id.
         """
@@ -113,7 +113,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             print(objdict["{}.{}".format(argl[0], argl[1])])
 
-    def cmd_destroy(self, arg):
+    def do_destroy(self, arg):
         """Usage: destroy <class> <id> or <class>.destroy(<id>)
         Delete a class by id."""
         argl = parse(arg)
@@ -130,7 +130,7 @@ class HBNBCommand(cmd.Cmd):
             del objdict["{}.{}".format(argl[0], argl[1])]
             storage.save()
 
-    def cmd_all(self, arg):
+    def do_all(self, arg):
         """Usage: all or all <class> or <class>.all()
         all obj instances of a class.
         when no class, get all init objects."""
@@ -146,7 +146,7 @@ class HBNBCommand(cmd.Cmd):
                     objl.append(obj.__str__())
             print(objl)
 
-    def cmd_count(self, arg):
+    def do_count(self, arg):
         """Usage: count <class> or <class>.count()
         get num of init of a class."""
         argl = parse(arg)
@@ -156,7 +156,7 @@ class HBNBCommand(cmd.Cmd):
                 count += 1
         print(count)
 
-    def cmd_update(self, arg):
+    def do_update(self, arg):
         """Usage: update <class> <id> <attribute_name> <attribute_value> or
        <class>.update(<id>, <attribute_name>, <attribute_value>) or
        <class>.update(<id>, <dictionary>)
