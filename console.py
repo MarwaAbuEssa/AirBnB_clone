@@ -13,19 +13,19 @@ from models.amenity import Amenity
 from models.review import Review
 
 
-def parse(arg):
-    curly_braces = re.search(r"\{(.*?)\}", arg)
-    brackets = re.search(r"\[(.*?)\]", arg)
+def parse(argument):
+    curly_braces = re.search(r"\{(.*?)\}", argument)
+    brackets = re.search(r"\[(.*?)\]", argument)
     if curly_braces is None:
         if brackets is None:
-            return [i.strip(",") for i in split(arg)]
+            return [i.strip(",") for i in split(argument)]
         else:
-            lexer = split(arg[:brackets.span()[0]])
+            lexer = split(argument[:brackets.span()[0]])
             retl = [i.strip(",") for i in lexer]
             retl.append(brackets.group())
             return retl
     else:
-        lexer = split(arg[:curly_braces.span()[0]])
+        lexer = split(argument[:curly_braces.span()[0]])
         retl = [i.strip(",") for i in lexer]
         retl.append(curly_braces.group())
         return retl
@@ -53,41 +53,41 @@ class HBNBCommand(cmd.Cmd):
         """an empty line."""
         pass
 
-    def default(self, arg):
+    def default(self, argument):
         """if input is invalid"""
-        argdict = {
+        cmd_dict = {
             "all": self.do_all,
             "show": self.do_show,
             "destroy": self.do_destroy,
             "count": self.do_count,
             "update": self.do_update
         }
-        match = re.search(r"\.", arg)
+        match = re.search(r"\.", argument)
         if match is not None:
-            argl = [arg[:match.span()[0]], arg[match.span()[1]:]]
+            argl = [argument[:match.span()[0]], argument[match.span()[1]:]]
             match = re.search(r"\((.*?)\)", argl[1])
             if match is not None:
                 command = [argl[1][:match.span()[0]], match.group()[1:-1]]
-                if command[0] in argdict.keys():
+                if command[0] in cmd_dict.keys():
                     call = "{} {}".format(argl[0], command[1])
-                    return argdict[command[0]](call)
-        print("*** Unknown syntax: {}".format(arg))
+                    return cmd_dict[command[0]](call)
+        print("*** Unknown syntax: {}".format(argument))
         return False
 
-    def do_quit(self, arg):
+    def do_quit(self, argument):
         """Quit to exit."""
         return True
 
-    def do_EOF(self, arg):
+    def do_EOF(self, argument):
         """EOF to exit."""
         print("")
         return True
 
-    def do_create(self, arg):
+    def do_create(self, argument):
         """Usage: create <class>
         init new class with id.
         """
-        argl = parse(arg)
+        argl = parse(argument)
         if len(argl) == 0:
             print("** class name missing **")
         elif argl[0] not in HBNBCommand.__classes:
@@ -96,11 +96,11 @@ class HBNBCommand(cmd.Cmd):
             print(eval(argl[0])().id)
             storage.save()
 
-    def do_show(self, arg):
+    def do_show(self, argument):
         """Usage: show <class> <id> or <class>.show(<id>)
         Get string  of a class by id.
         """
-        argl = parse(arg)
+        argl = parse(argument)
         objdict = storage.all()
         if len(argl) == 0:
             print("** class name missing **")
@@ -113,10 +113,10 @@ class HBNBCommand(cmd.Cmd):
         else:
             print(objdict["{}.{}".format(argl[0], argl[1])])
 
-    def do_destroy(self, arg):
+    def do_destroy(self, argument):
         """Usage: destroy <class> <id> or <class>.destroy(<id>)
         Delete a class by id."""
-        argl = parse(arg)
+        argl = parse(argument)
         objdict = storage.all()
         if len(argl) == 0:
             print("** class name missing **")
@@ -130,11 +130,11 @@ class HBNBCommand(cmd.Cmd):
             del objdict["{}.{}".format(argl[0], argl[1])]
             storage.save()
 
-    def do_all(self, arg):
+    def do_all(self, argument):
         """Usage: all or all <class> or <class>.all()
         Display all instances of a class.
         When no class , get all objects."""
-        argl = parse(arg)
+        argl = parse(argument)
         if len(argl) > 0 and argl[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
         else:
@@ -146,23 +146,23 @@ class HBNBCommand(cmd.Cmd):
                     objl.append(obj.__str__())
             print(objl)
 
-    def do_count(self, arg):
+    def do_count(self, argument):
         """Usage: count <class> or <class>.count()
         Get number of objects of a class."""
-        argl = parse(arg)
+        argl = parse(argument)
         count = 0
         for obj in storage.all().values():
             if argl[0] == obj.__class__.__name__:
                 count += 1
         print(count)
 
-    def do_update(self, arg):
+    def do_update(self, argument):
         """Usage: update <class> <id> <attribute_name> <attribute_value> or
        <class>.update(<id>, <attribute_name>, <attribute_value>) or
        <class>.update(<id>, <dictionary>)
         Add/Update a class instance by id
         an attribute key/value dictionary."""
-        argl = parse(arg)
+        argl = parse(argument)
         objdict = storage.all()
 
         if len(argl) == 0:
