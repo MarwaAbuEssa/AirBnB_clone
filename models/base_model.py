@@ -45,5 +45,3 @@ class BaseModel:
         """print/str  of the BaseModel ."""
         clname = self.__class__.__name__
         return "[{}] ({}) {}".format(clname, self.id, self.__dict__)
-
-
