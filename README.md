@@ -79,5 +79,5 @@ $ ./console.py
 ```
 
 ## Authors :black_nib:
-* **Marwa Abou Essa
-* **Lameck Kipruto
+* Marwa Abou Essa
+* Lameck Kipruto
